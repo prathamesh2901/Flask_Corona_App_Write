@@ -6,8 +6,8 @@ from flask_restful import Api
 from flask_jwt import JWT
 from security import authenticate, identity
 from resources.user import UserRegister
-from resources.country import Country, Countries
-from resources.state import State, States
+from resources.country import Country
+from resources.state import State
 
 
 app = Flask(__name__)
@@ -19,10 +19,8 @@ api = Api(app)
 
 jwt = JWT(app, authenticate, identity) #/auth
 
-api.add_resource(Countries, '/countries')
 api.add_resource(Country, '/country/<string:name>')
 api.add_resource(State, '/state/<string:country>/<string:name>')
-api.add_resource(States, '/states')
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
