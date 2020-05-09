@@ -19,10 +19,8 @@ api = Api(app)
 
 jwt = JWT(app, authenticate, identity) #/auth
 
-api.add_resource(Countries, '/countries')
 api.add_resource(Country, '/country/<string:name>')
 api.add_resource(State, '/state/<string:country>/<string:name>')
-api.add_resource(States, '/states')
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
