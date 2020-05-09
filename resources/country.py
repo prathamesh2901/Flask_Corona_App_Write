@@ -10,12 +10,6 @@ class Country(Resource):
     parser.add_argument('deaths', type = int, required = True, help = 'This is a required field')
     parser.add_argument('recoveries', type = int, required = False,)
 
-    def get(self, name):
-        country = CountryModel.find_by_country(name)
-        if country:
-            return country.json()
-        return {'message': 'Country not found'}, 404
-
     def post(self, name):
         if CountryModel.find_by_country(name):
             return {"message": "An country with the name '{}' already exist.".format(name)}, 400
@@ -54,8 +48,3 @@ class Country(Resource):
         country.save_to_db()
 
         return country.json()
-
-
-class Countries(Resource):
-    def get(self):
-        return {'countries': [ country.json() for country in CountryModel.query.all()]}

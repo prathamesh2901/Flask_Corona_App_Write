@@ -9,11 +9,6 @@ class State(Resource):
     parser.add_argument('deaths', type = int, required = True, help = 'This is a required field')
     parser.add_argument('recoveries', type = int, required = False,)
 
-    def get(self, name, country):
-        state = StateModel.find_by_state(name)
-        if state:
-             return state.json()
-        return {'message': 'State not found'}, 404
 
     def post(self, name, country):
         if StateModel.find_by_state(name):
@@ -27,14 +22,27 @@ class State(Resource):
         except:
             return {'message': 'An Error occured while creating the state'}, 500
 
+
+    def put(self, name, country):
+
+        data = State.parser.parse_args()
+
+        state = StateModel.find_by_country(name)
+
+        if state is None:
+            state = StateModel(name, **data)
+        else:
+            state.cases = data['cases']
+            state.deaths = data['deaths']
+            state.deaths = data['deaths']
+
+        state.save_to_db()
+
+        return state.json()
+
     def delete(self, name, country):
         state = StateModel.find_by_state(name)
         if state:
             state.delete_from_db()
             return {"message": "State '{}' Deleted".format(name)}, 200
         return {"message": "State '{}' does not exist".format(name)}, 404
-
-
-class States(Resource):
-    def get(self):
-        return {'states': [state.json() for state in StateModel.query.all()]}
